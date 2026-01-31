@@ -1,66 +1,129 @@
-use mqtt_broker::{broker::Broker, utils::buffer_to_array, action::Action, traits::topic::{PublishTopic, ConsumeTopic}};
-use bytes::BytesMut;
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
+//! MQTT Broker binary entry point.
+//!
+//! Usage: mqtt-broker [OPTIONS]
+//!
+//! Options:
+//!   -h, --host <HOST>    Host address to bind to [default: 0.0.0.0]
+//!   -p, --port <PORT>    Port to listen on [default: 1883]
+//!   --max-clients <N>    Maximum concurrent clients [default: 10000]
+//!   --help               Print help
 
-/** Entry function for broker */
-#[tokio::main]
-pub async fn main() {
-    let mut broker = Broker::listen(("127.0.0.1", 3000)).await;
+use std::env;
+use std::net::SocketAddr;
+use std::process::exit;
 
-    broker.add_topic("tanks");
+use mqtt_broker::server::{Server, ServerConfig};
 
-    loop {
+fn print_help() {
+    eprintln!("MQTT Broker - Production-grade MQTT 3.1.1 broker");
+    eprintln!();
+    eprintln!("Usage: mqtt-broker [OPTIONS]");
+    eprintln!();
+    eprintln!("Options:");
+    eprintln!("  -h, --host <HOST>    Host address to bind to [default: 0.0.0.0]");
+    eprintln!("  -p, --port <PORT>    Port to listen on [default: 1883]");
+    eprintln!("  --max-clients <N>    Maximum concurrent clients [default: 10000]");
+    eprintln!("  --help               Print help");
+}
 
-        /* Stop the thread until stream comes */
-        let mut stream = broker
-            .accept()
-            .await;
-
-        /* Create empty space for saving buffer */
-        let mut buffer = BytesMut::with_capacity(1024);
-
-        /* Write incoming stream into empty buffer space */
-        let _ = stream.read_buf(&mut buffer).await.expect("Failed");
-
-        let arguments_vec = buffer_to_array(&mut buffer);
-
-        let action = match arguments_vec.len() {
-            1 => Action::Consume,
-            2 => Action::Publish,
-            _ => {
-                /* If received invalid arguments, just ignore this connection and continue loop */
-                eprintln!("Server received invalid arguments");
-                continue;
+fn parse_args() -> Result<ServerConfig, String> {
+    let args: Vec<String> = env::args().collect();
+    
+    let mut host = "0.0.0.0".to_string();
+    let mut port: u16 = 1883;
+    let mut max_clients: usize = 10000;
+    
+    let mut i = 1;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--help" => {
+                print_help();
+                exit(0);
             }
-        };
-
-        match action {
-            Action::Consume => {
-                let _ = stream.write_all(b"c ");
-                let topic_name = &arguments_vec[0];
-
-                let response = broker
-                    .consume(topic_name.as_str())
-                    .await;
-
-                if let Some(res) = response {
-                    if let Err(err) = stream.write_all(&res.as_str().as_bytes()).await {
-                        eprintln!("Failed to return response: {}", err);
-                    }
-                }      
-            },
-            Action::Publish => {
-                let _ = stream.write_all(b"p ");
-                let topic_name = &arguments_vec[0];
-                let message = &arguments_vec[1];
-                let _ = broker
-                    .publish(
-                        topic_name.as_str(),
-                        message.as_str()
-                    )
-                    .await;
+            "-h" | "--host" => {
+                if i + 1 >= args.len() {
+                    return Err("Missing value for --host".to_string());
+                }
+                host = args[i + 1].clone();
+                i += 2;
+            }
+            "-p" | "--port" => {
+                if i + 1 >= args.len() {
+                    return Err("Missing value for --port".to_string());
+                }
+                port = args[i + 1].parse()
+                    .map_err(|_| format!("Invalid port: {}", args[i + 1]))?;
+                i += 2;
+            }
+            "--max-clients" => {
+                if i + 1 >= args.len() {
+                    return Err("Missing value for --max-clients".to_string());
+                }
+                max_clients = args[i + 1].parse()
+                    .map_err(|_| format!("Invalid max-clients: {}", args[i + 1]))?;
+                i += 2;
+            }
+            arg => {
+                return Err(format!("Unknown argument: {}", arg));
             }
         }
     }
     
+    let addr: SocketAddr = format!("{}:{}", host, port).parse()
+        .map_err(|_| format!("Invalid address: {}:{}", host, port))?;
+    
+    let mut config = ServerConfig::new(addr);
+    config.max_connections = max_clients;
+    
+    Ok(config)
+}
+
+#[tokio::main]
+async fn main() {
+    // Initialize logging
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::from_default_env()
+                .add_directive(tracing::Level::INFO.into())
+        )
+        .init();
+    
+    // Parse arguments
+    let config = match parse_args() {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            eprintln!();
+            print_help();
+            exit(1);
+        }
+    };
+    
+    let bind_addr = config.bind_addr;
+    
+    // Create and run server
+    let server = Server::new(config);
+    
+    println!("╔══════════════════════════════════════════════════════════════╗");
+    println!("║              MQTT Broker v0.1.0 Starting                     ║");
+    println!("╠══════════════════════════════════════════════════════════════╣");
+    println!("║  Protocol: MQTT 3.1.1                                        ║");
+    println!("║  Address:  {:<50} ║", bind_addr);
+    println!("╚══════════════════════════════════════════════════════════════╝");
+    println!();
+    
+    // Handle Ctrl+C for graceful shutdown
+    let _server_ref = server.router();
+    tokio::spawn(async move {
+        tokio::signal::ctrl_c().await.expect("Failed to listen for Ctrl+C");
+        tracing::info!("Received Ctrl+C, shutting down...");
+    });
+    
+    // Run the server
+    if let Err(e) = server.run().await {
+        eprintln!("Server error: {}", e);
+        exit(1);
+    }
+    
+    println!("Server shutdown complete.");
 }
