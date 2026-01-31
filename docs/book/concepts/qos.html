@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js rust">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Quality of Service - mqtt-broker Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="A production-grade MQTT 3.1.1 broker implementation in Rust">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Getting Started</li><li class="chapter-item expanded "><a href="../getting-started/installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/quickstart.html"><strong aria-hidden="true">2.</strong> Quick Start</a></li><li class="chapter-item expanded "><a href="../getting-started/configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI Reference</li><li class="chapter-item expanded "><a href="../cli/broker.html"><strong aria-hidden="true">4.</strong> Broker</a></li><li class="chapter-item expanded "><a href="../cli/producer.html"><strong aria-hidden="true">5.</strong> Producer</a></li><li class="chapter-item expanded "><a href="../cli/consumer.html"><strong aria-hidden="true">6.</strong> Consumer</a></li><li class="chapter-item expanded affix "><li class="part-title">Concepts</li><li class="chapter-item expanded "><a href="../concepts/mqtt-protocol.html"><strong aria-hidden="true">7.</strong> MQTT Protocol</a></li><li class="chapter-item expanded "><a href="../concepts/topics.html"><strong aria-hidden="true">8.</strong> Topics & Wildcards</a></li><li class="chapter-item expanded "><a href="../concepts/qos.html" class="active"><strong aria-hidden="true">9.</strong> Quality of Service</a></li><li class="chapter-item expanded "><a href="../concepts/sessions.html"><strong aria-hidden="true">10.</strong> Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">Architecture</li><li class="chapter-item expanded "><a href="../architecture/overview.html"><strong aria-hidden="true">11.</strong> Overview</a></li><li class="chapter-item expanded "><a href="../architecture/modules.html"><strong aria-hidden="true">12.</strong> Modules</a></li><li class="chapter-item expanded affix "><li class="part-title">Development</li><li class="chapter-item expanded "><a href="../development/building.html"><strong aria-hidden="true">13.</strong> Building from Source</a></li><li class="chapter-item expanded "><a href="../development/testing.html"><strong aria-hidden="true">14.</strong> Running Tests</a></li><li class="chapter-item expanded "><a href="../development/contributing.html"><strong aria-hidden="true">15.</strong> Contributing</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">mqtt-broker Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/iliasichinava/mqtt-broker" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/iliasichinava/mqtt-broker/edit/master/docs/src/concepts/qos.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="quality-of-service-qos"><a class="header" href="#quality-of-service-qos">Quality of Service (QoS)</a></h1>
+<p>QoS levels define the delivery guarantee between a client and the broker.</p>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Level</th><th>Name</th><th>Guarantee</th><th>Use Case</th></tr></thead><tbody>
+<tr><td>0</td><td>At most once</td><td>Fire and forget</td><td>Telemetry, non-critical data</td></tr>
+<tr><td>1</td><td>At least once</td><td>Guaranteed, may duplicate</td><td>Important events</td></tr>
+<tr><td>2</td><td>Exactly once</td><td>Guaranteed, no duplicates</td><td>Financial transactions</td></tr>
+</tbody></table>
+</div>
+<h2 id="qos-0--at-most-once"><a class="header" href="#qos-0--at-most-once">QoS 0 — At Most Once</a></h2>
+<p>The simplest level. Message is sent once with no acknowledgment.</p>
+<pre><code>Publisher                Broker                 Subscriber
+    │                       │                       │
+    │  PUBLISH (QoS 0)      │                       │
+    │ ────────────────────► │                       │
+    │                       │  PUBLISH (QoS 0)      │
+    │                       │ ────────────────────► │
+    │                       │                       │
+</code></pre>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Fastest (no round trips)</li>
+<li>No retransmission</li>
+<li>Message may be lost</li>
+<li>No duplicate detection needed</li>
+</ul>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Sensor readings at high frequency</li>
+<li>Data where occasional loss is acceptable</li>
+<li>When bandwidth/latency is critical</li>
+</ul>
+<h2 id="qos-1--at-least-once"><a class="header" href="#qos-1--at-least-once">QoS 1 — At Least Once</a></h2>
+<p>Message is guaranteed to arrive, but may arrive multiple times.</p>
+<pre><code>Publisher                Broker                 Subscriber
+    │                       │                       │
+    │  PUBLISH (QoS 1)      │                       │
+    │  packet_id: 1         │                       │
+    │ ────────────────────► │                       │
+    │                       │  PUBLISH (QoS 1)      │
+    │                       │  packet_id: 1         │
+    │                       │ ────────────────────► │
+    │                       │                       │
+    │                       │  PUBACK               │
+    │                       │  packet_id: 1         │
+    │                       │ ◄──────────────────── │
+    │  PUBACK               │                       │
+    │  packet_id: 1         │                       │
+    │ ◄──────────────────── │                       │
+</code></pre>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>One round trip (PUBLISH → PUBACK)</li>
+<li>Message stored until acknowledged</li>
+<li>Retransmitted if no PUBACK received</li>
+<li>Duplicates possible on retransmit</li>
+</ul>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Important events that must arrive</li>
+<li>When duplicates can be handled (idempotent operations)</li>
+<li>Status updates, alerts</li>
+</ul>
+<h2 id="qos-2--exactly-once"><a class="header" href="#qos-2--exactly-once">QoS 2 — Exactly Once</a></h2>
+<p>Most reliable level. Guarantees exactly one delivery.</p>
+<pre><code>Publisher                Broker                 Subscriber
+    │                       │                       │
+    │  PUBLISH (QoS 2)      │                       │
+    │  packet_id: 1         │                       │
+    │ ────────────────────► │                       │
+    │                       │                       │
+    │  PUBREC               │                       │
+    │  packet_id: 1         │                       │
+    │ ◄──────────────────── │                       │
+    │                       │  PUBLISH (QoS 2)      │
+    │                       │ ────────────────────► │
+    │                       │  PUBREC               │
+    │                       │ ◄──────────────────── │
+    │  PUBREL               │                       │
+    │  packet_id: 1         │                       │
+    │ ────────────────────► │                       │
+    │                       │  PUBREL               │
+    │                       │ ────────────────────► │
+    │                       │  PUBCOMP              │
+    │                       │ ◄──────────────────── │
+    │  PUBCOMP              │                       │
+    │  packet_id: 1         │                       │
+    │ ◄──────────────────── │                       │
+</code></pre>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Two round trips (4-way handshake)</li>
+<li>Highest latency</li>
+<li>No duplicates</li>
+<li>State must be tracked</li>
+</ul>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Financial transactions</li>
+<li>Billing events</li>
+<li>Critical commands</li>
+<li>When duplicates are unacceptable</li>
+</ul>
+<h2 id="qos-downgrade"><a class="header" href="#qos-downgrade">QoS Downgrade</a></h2>
+<p>The actual QoS is the <strong>minimum</strong> of:</p>
+<ol>
+<li>Publisher's QoS</li>
+<li>Subscriber's maximum QoS</li>
+</ol>
+<pre><code>Publisher QoS    Subscriber Max QoS    Actual Delivery
+     2                   0                    0
+     2                   1                    1
+     1                   2                    1
+     0                   2                    0
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash"># Publisher sends with QoS 2
+mqtt-producer --qos 2 &quot;topic&quot; &quot;message&quot;
+
+# Subscriber subscribed with QoS 1
+mqtt-consumer --qos 1 &quot;topic&quot;
+
+# Message delivered with QoS 1 (minimum)
+</code></pre>
+<h2 id="packet-identifiers"><a class="header" href="#packet-identifiers">Packet Identifiers</a></h2>
+<p>QoS 1 and 2 use packet IDs to track message flows:</p>
+<ul>
+<li>16-bit unsigned integer (1-65535)</li>
+<li>Unique per client per direction</li>
+<li>Reusable after flow completes</li>
+<li>0 is reserved (not used)</li>
+</ul>
+<h2 id="state-machines"><a class="header" href="#state-machines">State Machines</a></h2>
+<h3 id="qos-1-publisher-state"><a class="header" href="#qos-1-publisher-state">QoS 1 Publisher State</a></h3>
+<pre><code>┌─────────────┐     PUBLISH     ┌─────────────┐
+│   Idle      │ ──────────────► │  Awaiting   │
+│             │                 │   PUBACK    │
+└─────────────┘                 └──────┬──────┘
+       ▲                               │
+       │            PUBACK             │
+       └───────────────────────────────┘
+</code></pre>
+<h3 id="qos-2-publisher-state"><a class="header" href="#qos-2-publisher-state">QoS 2 Publisher State</a></h3>
+<pre><code>┌─────────────┐     PUBLISH     ┌─────────────┐
+│   Idle      │ ──────────────► │  Awaiting   │
+│             │                 │   PUBREC    │
+└─────────────┘                 └──────┬──────┘
+       ▲                               │ PUBREC
+       │                               ▼
+       │                        ┌─────────────┐
+       │          PUBCOMP       │  Awaiting   │
+       └─────────────────────── │   PUBCOMP   │
+                                └──────┬──────┘
+                                       │ PUBREL
+                                       ▼
+</code></pre>
+<h2 id="performance-considerations"><a class="header" href="#performance-considerations">Performance Considerations</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Aspect</th><th>QoS 0</th><th>QoS 1</th><th>QoS 2</th></tr></thead><tbody>
+<tr><td>Packets</td><td>1</td><td>2</td><td>4</td></tr>
+<tr><td>Latency</td><td>Lowest</td><td>Medium</td><td>Highest</td></tr>
+<tr><td>Bandwidth</td><td>Lowest</td><td>Medium</td><td>Highest</td></tr>
+<tr><td>Memory</td><td>None</td><td>Moderate</td><td>Higher</td></tr>
+<tr><td>Reliability</td><td>None</td><td>High</td><td>Highest</td></tr>
+</tbody></table>
+</div>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<ol>
+<li><strong>Default to QoS 0</strong> for high-frequency telemetry</li>
+<li><strong>Use QoS 1</strong> for important data where duplicates are okay</li>
+<li><strong>Use QoS 2 sparingly</strong> — only when exactly-once is required</li>
+<li><strong>Design for idempotency</strong> — prefer QoS 1 + idempotent handlers over QoS 2</li>
+<li><strong>Consider trade-offs</strong> — QoS 2 is 4× the packets of QoS 0</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../concepts/topics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../concepts/sessions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../concepts/topics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../concepts/sessions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

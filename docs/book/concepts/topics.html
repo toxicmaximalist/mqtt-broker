@@ -1,0 +1,350 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js rust">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Topics &amp; Wildcards - mqtt-broker Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="A production-grade MQTT 3.1.1 broker implementation in Rust">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Getting Started</li><li class="chapter-item expanded "><a href="../getting-started/installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/quickstart.html"><strong aria-hidden="true">2.</strong> Quick Start</a></li><li class="chapter-item expanded "><a href="../getting-started/configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI Reference</li><li class="chapter-item expanded "><a href="../cli/broker.html"><strong aria-hidden="true">4.</strong> Broker</a></li><li class="chapter-item expanded "><a href="../cli/producer.html"><strong aria-hidden="true">5.</strong> Producer</a></li><li class="chapter-item expanded "><a href="../cli/consumer.html"><strong aria-hidden="true">6.</strong> Consumer</a></li><li class="chapter-item expanded affix "><li class="part-title">Concepts</li><li class="chapter-item expanded "><a href="../concepts/mqtt-protocol.html"><strong aria-hidden="true">7.</strong> MQTT Protocol</a></li><li class="chapter-item expanded "><a href="../concepts/topics.html" class="active"><strong aria-hidden="true">8.</strong> Topics & Wildcards</a></li><li class="chapter-item expanded "><a href="../concepts/qos.html"><strong aria-hidden="true">9.</strong> Quality of Service</a></li><li class="chapter-item expanded "><a href="../concepts/sessions.html"><strong aria-hidden="true">10.</strong> Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">Architecture</li><li class="chapter-item expanded "><a href="../architecture/overview.html"><strong aria-hidden="true">11.</strong> Overview</a></li><li class="chapter-item expanded "><a href="../architecture/modules.html"><strong aria-hidden="true">12.</strong> Modules</a></li><li class="chapter-item expanded affix "><li class="part-title">Development</li><li class="chapter-item expanded "><a href="../development/building.html"><strong aria-hidden="true">13.</strong> Building from Source</a></li><li class="chapter-item expanded "><a href="../development/testing.html"><strong aria-hidden="true">14.</strong> Running Tests</a></li><li class="chapter-item expanded "><a href="../development/contributing.html"><strong aria-hidden="true">15.</strong> Contributing</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">mqtt-broker Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/iliasichinava/mqtt-broker" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/iliasichinava/mqtt-broker/edit/master/docs/src/concepts/topics.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="topics--wildcards"><a class="header" href="#topics--wildcards">Topics &amp; Wildcards</a></h1>
+<p>Topics are the addressing mechanism in MQTT. Publishers send messages to topics, and subscribers receive messages from topics they've subscribed to.</p>
+<h2 id="topic-names"><a class="header" href="#topic-names">Topic Names</a></h2>
+<p>A <strong>topic name</strong> is the destination for a published message.</p>
+<h3 id="rules"><a class="header" href="#rules">Rules</a></h3>
+<ul>
+<li>UTF-8 encoded string</li>
+<li>At least 1 character</li>
+<li>Maximum 65,535 bytes</li>
+<li>Case-sensitive (<code>Sensor/Temp</code> ≠ <code>sensor/temp</code>)</li>
+<li>Can contain spaces (but not recommended)</li>
+<li>Cannot contain wildcards (<code>+</code> or <code>#</code>)</li>
+<li>Cannot contain null character</li>
+</ul>
+<h3 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h3>
+<pre><code>✅ Good topics:
+   home/kitchen/temperature
+   sensors/device-01/status
+   usa/california/sf/weather
+
+❌ Avoid:
+   /leading/slash           (creates empty first level)
+   trailing/slash/          (creates empty last level)
+   double//slash            (creates empty middle level)
+   Spaces In Topic          (harder to work with)
+</code></pre>
+<h3 id="topic-levels"><a class="header" href="#topic-levels">Topic Levels</a></h3>
+<p>Topics are hierarchical, separated by <code>/</code>:</p>
+<pre><code>home / kitchen / temperature
+ │       │           │
+ │       │           └── Level 3
+ │       └────────────── Level 2
+ └────────────────────── Level 1
+</code></pre>
+<h2 id="topic-filters"><a class="header" href="#topic-filters">Topic Filters</a></h2>
+<p>A <strong>topic filter</strong> is used when subscribing. It can include wildcards to match multiple topics.</p>
+<h3 id="single-level-wildcard-"><a class="header" href="#single-level-wildcard-">Single-Level Wildcard (<code>+</code>)</a></h3>
+<p>Matches exactly <strong>one</strong> topic level.</p>
+<pre><code class="language-bash"># Subscribe
+mqtt-consumer &quot;home/+/temperature&quot;
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>Published Topic</th><th>Matches?</th></tr></thead><tbody>
+<tr><td><code>home/kitchen/temperature</code></td><td>✅ Yes</td></tr>
+<tr><td><code>home/bedroom/temperature</code></td><td>✅ Yes</td></tr>
+<tr><td><code>home/temperature</code></td><td>❌ No (missing level)</td></tr>
+<tr><td><code>home/floor1/kitchen/temperature</code></td><td>❌ No (extra level)</td></tr>
+</tbody></table>
+</div>
+<p><strong>More examples:</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Filter</th><th>Matches</th></tr></thead><tbody>
+<tr><td><code>+/tennis/#</code></td><td><code>sport/tennis/player1</code></td></tr>
+<tr><td><code>sport/+/player1</code></td><td><code>sport/tennis/player1</code>, <code>sport/golf/player1</code></td></tr>
+<tr><td><code>+/+</code></td><td><code>a/b</code>, <code>foo/bar</code> (exactly 2 levels)</td></tr>
+</tbody></table>
+</div>
+<h3 id="multi-level-wildcard-"><a class="header" href="#multi-level-wildcard-">Multi-Level Wildcard (<code>#</code>)</a></h3>
+<p>Matches <strong>zero or more</strong> topic levels. Must be the last character.</p>
+<pre><code class="language-bash"># Subscribe to everything under home/
+mqtt-consumer &quot;home/#&quot;
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>Published Topic</th><th>Matches?</th></tr></thead><tbody>
+<tr><td><code>home</code></td><td>✅ Yes</td></tr>
+<tr><td><code>home/kitchen</code></td><td>✅ Yes</td></tr>
+<tr><td><code>home/kitchen/temperature</code></td><td>✅ Yes</td></tr>
+<tr><td><code>home/floor1/kitchen/oven/status</code></td><td>✅ Yes</td></tr>
+<tr><td><code>office/kitchen</code></td><td>❌ No</td></tr>
+</tbody></table>
+</div>
+<p><strong>More examples:</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Filter</th><th>Matches</th></tr></thead><tbody>
+<tr><td><code>#</code></td><td>Everything (all topics)</td></tr>
+<tr><td><code>sport/#</code></td><td><code>sport</code>, <code>sport/tennis</code>, <code>sport/tennis/player1</code></td></tr>
+<tr><td><code>sport/tennis/#</code></td><td><code>sport/tennis</code>, <code>sport/tennis/player1/ranking</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="combining-wildcards"><a class="header" href="#combining-wildcards">Combining Wildcards</a></h3>
+<p>You can use both wildcards in one filter:</p>
+<pre><code class="language-bash">mqtt-consumer &quot;+/sensors/+/temperature/#&quot;
+</code></pre>
+<p>Matches:</p>
+<ul>
+<li><code>home/sensors/kitchen/temperature</code></li>
+<li><code>office/sensors/room1/temperature/celsius</code></li>
+</ul>
+<h2 id="system-topics"><a class="header" href="#system-topics">System Topics</a></h2>
+<p>Topics starting with <code>$</code> are reserved for broker internals:</p>
+<pre><code>$SYS/broker/version
+$SYS/broker/uptime
+$SYS/broker/clients/connected
+</code></pre>
+<ul>
+<li>Clients <strong>cannot</strong> publish to <code>$</code> topics</li>
+<li>Wildcard <code>#</code> does <strong>not</strong> match <code>$</code> topics</li>
+<li>Must explicitly subscribe: <code>$SYS/#</code></li>
+</ul>
+<h2 id="topic-design-patterns"><a class="header" href="#topic-design-patterns">Topic Design Patterns</a></h2>
+<h3 id="hierarchical-location-based"><a class="header" href="#hierarchical-location-based">Hierarchical (Location-based)</a></h3>
+<pre><code>{country}/{state}/{city}/{building}/{floor}/{room}/{sensor}
+usa/california/sf/office1/floor2/room201/temperature
+</code></pre>
+<h3 id="entity-based"><a class="header" href="#entity-based">Entity-based</a></h3>
+<pre><code>{entity_type}/{entity_id}/{attribute}
+device/sensor-001/temperature
+user/alice/presence
+</code></pre>
+<h3 id="event-based"><a class="header" href="#event-based">Event-based</a></h3>
+<pre><code>{domain}/{event_type}/{entity}
+orders/created/order-123
+payments/processed/tx-456
+</code></pre>
+<h3 id="command--response"><a class="header" href="#command--response">Command &amp; Response</a></h3>
+<pre><code># Commands
+device/{device_id}/command
+device/{device_id}/command/reboot
+
+# Responses
+device/{device_id}/response
+device/{device_id}/status
+</code></pre>
+<h2 id="implementation-details"><a class="header" href="#implementation-details">Implementation Details</a></h2>
+<p>This broker uses a <strong>trie data structure</strong> for O(k) topic matching, where k is the number of topic levels. This enables efficient matching even with millions of subscriptions.</p>
+<pre><code>Root
+├── home
+│   ├── kitchen
+│   │   └── temperature [subscriber: client-1]
+│   └── + (wildcard)
+│       └── humidity [subscriber: client-2]
+└── sensors
+    └── # (multi-wildcard) [subscriber: client-3]
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../concepts/mqtt-protocol.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../concepts/qos.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../concepts/mqtt-protocol.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../concepts/qos.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

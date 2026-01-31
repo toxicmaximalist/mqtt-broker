@@ -1,0 +1,16 @@
+[book]
+title = "mqtt-broker Documentation"
+authors = ["Ilia Sichinava"]
+description = "A production-grade MQTT 3.1.1 broker implementation in Rust"
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+default-theme = "rust"
+preferred-dark-theme = "ayu"
+git-repository-url = "https://github.com/iliasichinava/mqtt-broker"
+edit-url-template = "https://github.com/iliasichinava/mqtt-broker/edit/master/docs/{path}"
+site-url = "/mqtt-broker/"

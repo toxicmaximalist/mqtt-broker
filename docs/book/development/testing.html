@@ -1,0 +1,544 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js rust">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Running Tests - mqtt-broker Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="A production-grade MQTT 3.1.1 broker implementation in Rust">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Getting Started</li><li class="chapter-item expanded "><a href="../getting-started/installation.html"><strong aria-hidden="true">1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/quickstart.html"><strong aria-hidden="true">2.</strong> Quick Start</a></li><li class="chapter-item expanded "><a href="../getting-started/configuration.html"><strong aria-hidden="true">3.</strong> Configuration</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI Reference</li><li class="chapter-item expanded "><a href="../cli/broker.html"><strong aria-hidden="true">4.</strong> Broker</a></li><li class="chapter-item expanded "><a href="../cli/producer.html"><strong aria-hidden="true">5.</strong> Producer</a></li><li class="chapter-item expanded "><a href="../cli/consumer.html"><strong aria-hidden="true">6.</strong> Consumer</a></li><li class="chapter-item expanded affix "><li class="part-title">Concepts</li><li class="chapter-item expanded "><a href="../concepts/mqtt-protocol.html"><strong aria-hidden="true">7.</strong> MQTT Protocol</a></li><li class="chapter-item expanded "><a href="../concepts/topics.html"><strong aria-hidden="true">8.</strong> Topics & Wildcards</a></li><li class="chapter-item expanded "><a href="../concepts/qos.html"><strong aria-hidden="true">9.</strong> Quality of Service</a></li><li class="chapter-item expanded "><a href="../concepts/sessions.html"><strong aria-hidden="true">10.</strong> Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">Architecture</li><li class="chapter-item expanded "><a href="../architecture/overview.html"><strong aria-hidden="true">11.</strong> Overview</a></li><li class="chapter-item expanded "><a href="../architecture/modules.html"><strong aria-hidden="true">12.</strong> Modules</a></li><li class="chapter-item expanded affix "><li class="part-title">Development</li><li class="chapter-item expanded "><a href="../development/building.html"><strong aria-hidden="true">13.</strong> Building from Source</a></li><li class="chapter-item expanded "><a href="../development/testing.html" class="active"><strong aria-hidden="true">14.</strong> Running Tests</a></li><li class="chapter-item expanded "><a href="../development/contributing.html"><strong aria-hidden="true">15.</strong> Contributing</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">mqtt-broker Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/iliasichinava/mqtt-broker" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/iliasichinava/mqtt-broker/edit/master/docs/src/development/testing.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="running-tests"><a class="header" href="#running-tests">Running Tests</a></h1>
+<p>Comprehensive testing is a core principle of this project. Here's how to run and write tests.</p>
+<h2 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h2>
+<p>Run all tests:</p>
+<pre><code class="language-bash">cargo test
+</code></pre>
+<p>Expected output:</p>
+<pre><code>running 178 tests
+...
+test result: ok. 178 passed; 0 failed; 0 ignored
+</code></pre>
+<h2 id="test-commands"><a class="header" href="#test-commands">Test Commands</a></h2>
+<h3 id="run-all-tests"><a class="header" href="#run-all-tests">Run All Tests</a></h3>
+<pre><code class="language-bash">cargo test
+</code></pre>
+<h3 id="run-tests-with-output"><a class="header" href="#run-tests-with-output">Run Tests with Output</a></h3>
+<p>See println! output from tests:</p>
+<pre><code class="language-bash">cargo test -- --nocapture
+</code></pre>
+<h3 id="run-specific-test"><a class="header" href="#run-specific-test">Run Specific Test</a></h3>
+<pre><code class="language-bash"># By name
+cargo test test_publish_decode
+
+# By partial name
+cargo test publish
+
+# By module
+cargo test codec::
+</code></pre>
+<h3 id="run-tests-in-specific-module"><a class="header" href="#run-tests-in-specific-module">Run Tests in Specific Module</a></h3>
+<pre><code class="language-bash"># Codec tests only
+cargo test --package mqtt-broker --lib codec::tests
+
+# Topic matcher tests
+cargo test --package mqtt-broker --lib topic_matcher::tests
+
+# Session tests
+cargo test --package mqtt-broker --lib session::tests
+</code></pre>
+<h3 id="run-tests-in-release-mode"><a class="header" href="#run-tests-in-release-mode">Run Tests in Release Mode</a></h3>
+<pre><code class="language-bash">cargo test --release
+</code></pre>
+<h3 id="run-ignored-tests"><a class="header" href="#run-ignored-tests">Run Ignored Tests</a></h3>
+<p>Some tests are marked <code>#[ignore]</code> (slow or require setup):</p>
+<pre><code class="language-bash">cargo test -- --ignored
+</code></pre>
+<h3 id="run-all-including-ignored"><a class="header" href="#run-all-including-ignored">Run All Including Ignored</a></h3>
+<pre><code class="language-bash">cargo test -- --include-ignored
+</code></pre>
+<h2 id="test-organization"><a class="header" href="#test-organization">Test Organization</a></h2>
+<pre><code>src/
+├── codec/
+│   └── tests.rs          # 60 tests
+├── topic_matcher/
+│   └── tests.rs          # 23 tests
+├── session/
+│   └── tests.rs          # 24 tests
+├── router/
+│   └── tests.rs          # 24 tests
+├── persistence/
+│   └── tests.rs          # 20 tests
+├── transport/
+│   └── tests.rs          # 16 tests
+└── server/
+    └── tests.rs          # 11 tests
+
+tests/
+├── codec_proptest.rs     # Property-based tests
+└── message_test.rs       # Integration tests
+</code></pre>
+<h2 id="test-categories"><a class="header" href="#test-categories">Test Categories</a></h2>
+<h3 id="unit-tests"><a class="header" href="#unit-tests">Unit Tests</a></h3>
+<p>Test individual functions and structs:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_encode_decode_roundtrip() {
+        let packet = ConnectPacket {
+            client_id: &quot;test&quot;.to_string(),
+            // ...
+        };
+        
+        let mut buf = BytesMut::new();
+        MqttEncoder::encode(&amp;MqttPacket::Connect(packet.clone()), &amp;mut buf).unwrap();
+        
+        let decoded = MqttDecoder::decode(&amp;mut buf).unwrap().unwrap();
+        assert_eq!(decoded, MqttPacket::Connect(packet));
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="integration-tests"><a class="header" href="#integration-tests">Integration Tests</a></h3>
+<p>Test multiple components together (in <code>tests/</code> directory):</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// tests/message_test.rs
+use mqtt_broker::*;
+
+#[tokio::test]
+async fn test_publish_flow() {
+    let router = Router::new();
+    let session = Session::new(&quot;client-1&quot;, false);
+    
+    // Subscribe
+    router.subscribe(&quot;client-1&quot;, &quot;sensors/#&quot;, QoS::AtLeastOnce);
+    
+    // Publish
+    let message = PublishPacket {
+        topic: &quot;sensors/temp&quot;.to_string(),
+        payload: b&quot;25&quot;.to_vec(),
+        // ...
+    };
+    
+    let deliveries = router.route(&amp;message);
+    assert_eq!(deliveries.len(), 1);
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="property-based-tests"><a class="header" href="#property-based-tests">Property-Based Tests</a></h3>
+<p>Using <code>proptest</code> for randomized testing:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// tests/codec_proptest.rs
+use proptest::prelude::*;
+
+proptest! {
+    #[test]
+    fn test_varint_roundtrip(value in 0u32..268435455) {
+        let mut buf = BytesMut::new();
+        encode_variable_int(value, &amp;mut buf).unwrap();
+        let decoded = decode_variable_int(&amp;mut buf).unwrap();
+        prop_assert_eq!(value, decoded);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Run property tests:</p>
+<pre><code class="language-bash">cargo test proptest
+</code></pre>
+<h3 id="async-tests"><a class="header" href="#async-tests">Async Tests</a></h3>
+<p>Using <code>#[tokio::test]</code> for async code:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tokio::test]
+async fn test_server_accept() {
+    let server = MqttServer::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+    let addr = server.local_addr();
+    
+    tokio::spawn(async move {
+        server.run().await.unwrap();
+    });
+    
+    let client = TcpStream::connect(addr).await.unwrap();
+    assert!(client.peer_addr().is_ok());
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="test-coverage"><a class="header" href="#test-coverage">Test Coverage</a></h2>
+<h3 id="using-cargo-tarpaulin"><a class="header" href="#using-cargo-tarpaulin">Using cargo-tarpaulin</a></h3>
+<pre><code class="language-bash"># Install
+cargo install cargo-tarpaulin
+
+# Run coverage
+cargo tarpaulin --out Html
+
+# Open report
+open tarpaulin-report.html
+</code></pre>
+<h3 id="using-llvm-cov"><a class="header" href="#using-llvm-cov">Using llvm-cov</a></h3>
+<pre><code class="language-bash"># Install
+rustup component add llvm-tools-preview
+cargo install cargo-llvm-cov
+
+# Run coverage
+cargo llvm-cov --html
+
+# Open report
+open target/llvm-cov/html/index.html
+</code></pre>
+<h2 id="benchmarks"><a class="header" href="#benchmarks">Benchmarks</a></h2>
+<h3 id="criterion-benchmarks"><a class="header" href="#criterion-benchmarks">Criterion Benchmarks</a></h3>
+<pre><code class="language-bash"># Run all benchmarks
+cargo bench
+
+# Run specific benchmark
+cargo bench publish
+</code></pre>
+<p>Benchmark location: <code>benches/</code></p>
+<p>Example benchmark:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// benches/codec_bench.rs
+use criterion::{criterion_group, criterion_main, Criterion};
+use mqtt_broker::codec::*;
+
+fn bench_publish_encode(c: &amp;mut Criterion) {
+    let packet = PublishPacket {
+        topic: &quot;sensors/temperature&quot;.to_string(),
+        payload: vec![0u8; 1024],
+        // ...
+    };
+    
+    c.bench_function(&quot;publish_encode_1kb&quot;, |b| {
+        b.iter(|| {
+            let mut buf = BytesMut::with_capacity(2048);
+            MqttEncoder::encode(&amp;MqttPacket::Publish(packet.clone()), &amp;mut buf)
+        })
+    });
+}
+
+criterion_group!(benches, bench_publish_encode);
+criterion_main!(benches);
+<span class="boring">}</span></code></pre></pre>
+<h2 id="writing-new-tests"><a class="header" href="#writing-new-tests">Writing New Tests</a></h2>
+<h3 id="test-naming-convention"><a class="header" href="#test-naming-convention">Test Naming Convention</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test]
+fn test_&lt;module&gt;_&lt;function&gt;_&lt;scenario&gt;() {
+    // ...
+}
+
+// Examples:
+fn test_codec_publish_empty_payload() { }
+fn test_topic_filter_multi_wildcard() { }
+fn test_session_clean_session_true() { }
+<span class="boring">}</span></code></pre></pre>
+<h3 id="test-structure-aaa-pattern"><a class="header" href="#test-structure-aaa-pattern">Test Structure (AAA Pattern)</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test]
+fn test_subscribe_adds_to_trie() {
+    // Arrange
+    let mut router = Router::new();
+    
+    // Act
+    router.subscribe(&quot;client-1&quot;, &quot;sensors/#&quot;, QoS::AtLeastOnce);
+    
+    // Assert
+    let matches = router.matches(&quot;sensors/temp&quot;);
+    assert_eq!(matches.len(), 1);
+    assert_eq!(matches[0].client_id, &quot;client-1&quot;);
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="testing-error-cases"><a class="header" href="#testing-error-cases">Testing Error Cases</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test]
+fn test_invalid_topic_filter_returns_error() {
+    let result = TopicFilter::parse(&quot;sensors/#/invalid&quot;);
+    assert!(result.is_err());
+    assert!(matches!(result, Err(TopicError::InvalidFilter(_))));
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="testing-async-code"><a class="header" href="#testing-async-code">Testing Async Code</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tokio::test]
+async fn test_connection_timeout() {
+    let result = tokio::time::timeout(
+        Duration::from_millis(100),
+        Connection::connect(&quot;127.0.0.1:9999&quot;)
+    ).await;
+    
+    assert!(result.is_err()); // Timeout
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="ci-integration"><a class="header" href="#ci-integration">CI Integration</a></h2>
+<p>Tests run automatically on GitHub Actions:</p>
+<pre><code class="language-yaml"># .github/workflows/ci.yml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --all-features
+</code></pre>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
+<h3 id="tests-hang"><a class="header" href="#tests-hang">Tests Hang</a></h3>
+<p>Usually a deadlock or missing <code>.await</code>:</p>
+<pre><code class="language-bash"># Run with timeout
+timeout 60 cargo test
+
+# Run single-threaded
+cargo test -- --test-threads=1
+</code></pre>
+<h3 id="flaky-tests"><a class="header" href="#flaky-tests">Flaky Tests</a></h3>
+<p>Add retry or increase timeouts:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[tokio::test(flavor = &quot;multi_thread&quot;)]
+async fn test_concurrent_publishes() {
+    // Use tokio::time::timeout
+    let result = tokio::time::timeout(
+        Duration::from_secs(5),
+        async_operation()
+    ).await;
+    
+    assert!(result.is_ok());
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="port-already-in-use"><a class="header" href="#port-already-in-use">Port Already in Use</a></h3>
+<p>Tests using network ports can conflict:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Use port 0 for automatic assignment
+let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+let addr = listener.local_addr().unwrap();
+<span class="boring">}</span></code></pre></pre>
+<h3 id="debug-failing-tests"><a class="header" href="#debug-failing-tests">Debug Failing Tests</a></h3>
+<pre><code class="language-bash"># Verbose output
+cargo test test_name -- --nocapture
+
+# With RUST_BACKTRACE
+RUST_BACKTRACE=1 cargo test test_name
+
+# With logging
+RUST_LOG=debug cargo test test_name -- --nocapture
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../development/building.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../development/contributing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../development/building.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../development/contributing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
