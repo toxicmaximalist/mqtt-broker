@@ -1,8 +1,7 @@
 # mqtt-broker
 
-[![Crates.io](https://img.shields.io/crates/v/mqtt-broker.svg)](https://crates.io/crates/mqtt-broker)
-[![Documentation](https://docs.rs/mqtt-broker/badge.svg)](https://docs.rs/mqtt-broker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org)
 
 A production-grade MQTT 3.1.1 broker implementation in Rust.
 
@@ -19,17 +18,24 @@ A production-grade MQTT 3.1.1 broker implementation in Rust.
 
 ## Installation
 
-Add to your `Cargo.toml`:
-
-```toml
-[dependencies]
-mqtt-broker = "0.1"
-```
-
-Or install the CLI tools:
+### From Source
 
 ```bash
-cargo install mqtt-broker
+# Clone the repository
+git clone https://github.com/iliasichinava/mqtt-broker.git
+cd mqtt-broker
+
+# Build and install
+cargo build --release
+
+# Or install directly
+cargo install --path .
+```
+
+### From GitHub
+
+```bash
+cargo install --git https://github.com/iliasichinava/mqtt-broker.git
 ```
 
 ## Quick Start
