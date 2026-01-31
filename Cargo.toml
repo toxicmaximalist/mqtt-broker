@@ -2,6 +2,36 @@
 name = "mqtt-broker"
 version = "0.1.0"
 edition = "2021"
+authors = ["Ilia Sichinava <ilia@example.com>"]
+description = "A production-grade MQTT 3.1.1 broker implementation in Rust"
+license = "MIT"
+repository = "https://github.com/iliasichinava/mqtt-broker"
+documentation = "https://docs.rs/mqtt-broker"
+homepage = "https://github.com/iliasichinava/mqtt-broker"
+readme = "README.md"
+keywords = ["mqtt", "broker", "iot", "pubsub", "messaging"]
+categories = ["network-programming", "asynchronous"]
+rust-version = "1.70"
+exclude = [
+    ".github/*",
+    ".vscode/*",
+    "target/*",
+]
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[[bin]]
+name = "mqtt-broker"
+path = "src/bin/broker.rs"
+
+[[bin]]
+name = "mqtt-producer"
+path = "src/bin/producer.rs"
+
+[[bin]]
+name = "mqtt-consumer"
+path = "src/bin/consumer.rs"
 
 [dependencies]
 tokio = { version = "1.32", features = ["full"] }

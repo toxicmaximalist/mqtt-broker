@@ -1,1 +1,32 @@
-/target
+# Build artifacts
+/target/
+debug/
+release/
+
+# Cargo
+Cargo.lock
+**/*.rs.bk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Testing
+coverage/
+*.profraw
+*.profdata
