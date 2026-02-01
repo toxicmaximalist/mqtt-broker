@@ -2,12 +2,12 @@
 name = "mqtt-broker"
 version = "0.1.0"
 edition = "2021"
-authors = ["Ilia Sichinava <ilia@example.com>"]
+authors = ["toxicmaximalist"]
 description = "A production-grade MQTT 3.1.1 broker implementation in Rust"
 license = "MIT"
-repository = "https://github.com/iliasichinava/mqtt-broker"
+repository = "https://github.com/toxicmaximalist/mqtt-broker"
 documentation = "https://docs.rs/mqtt-broker"
-homepage = "https://github.com/iliasichinava/mqtt-broker"
+homepage = "https://github.com/toxicmaximalist/mqtt-broker"
 readme = "README.md"
 keywords = ["mqtt", "broker", "iot", "pubsub", "messaging"]
 categories = ["network-programming", "asynchronous"]
